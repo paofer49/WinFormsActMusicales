@@ -65,9 +65,20 @@ namespace WinFormsActMusicales
             }
         }
 
-        private void btnInsertar_Click(object sender, EventArgs e)
+        private async void btnInsertar_Click(object sender, EventArgs e)
         {
+            var act = new Actividad
+            {
+                Nombre = txtNombre.Text,
+                Descripcion = txtDesc.Text,
+                Fecha = dateTimePicker1.Value,
+                TipoActividadId = Convert.ToInt32((int)comboBox1.SelectedValue),
+                Lugar = txtLugar.Text
+            };
 
+            var result = await api.CreateActividadAsync(act);
+            MessageBox.Show(result);
+            ClearInputs();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -78,6 +89,16 @@ namespace WinFormsActMusicales
         private void btnEliminar_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ClearInputs()
+        {
+            txtNombre.Clear();
+            txtDesc.Clear();
+            txtLugar.Clear();
+            comboBox1.SelectedIndex = -1;
+            dateTimePicker1.Value = DateTime.Today;
+            comboBox1.SelectedValue = -1;
         }
     }
 }
