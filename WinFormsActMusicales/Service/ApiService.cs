@@ -70,5 +70,59 @@ namespace WinFormsActMusicales.Service
 
             return acts ?? new List<Actividad>();
         }
+
+        public async Task<string> CreateActividadAsync(Actividad act)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            };
+
+            using var client = new HttpClient(handler);
+            client.BaseAddress = new Uri("https://localhost:5178/");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+
+            var json = JsonSerializer.Serialize(act);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("api/Actividad", content);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> UpdateActividadAsync(int id, Actividad act)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            };
+
+            using var client = new HttpClient(handler);
+            client.BaseAddress = new Uri("https://localhost:5178/");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+
+            var json = JsonSerializer.Serialize(act);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync($"api/Actividad/{id}", content);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> DeleteActividadAsync(int id)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            };
+
+            using var client = new HttpClient(handler);
+            client.BaseAddress = new Uri("https://localhost:5178/");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+
+            var response = await client.DeleteAsync($"api/Actividad/{id}");
+
+            return await response.Content.ReadAsStringAsync();
+        }
     }
 }
