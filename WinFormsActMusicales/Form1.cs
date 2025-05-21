@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using WinFormsActMusicales.Model;
 using WinFormsActMusicales.Service;
 namespace WinFormsActMusicales
@@ -5,6 +6,7 @@ namespace WinFormsActMusicales
     public partial class Form1 : Form
     {
         private ApiService api;
+        private int? _selectedActividadId = null;
         public Form1()
         {
             InitializeComponent();
@@ -55,6 +57,9 @@ namespace WinFormsActMusicales
             if (e.RowIndex >= 0)
             {
                 var row = dataGridView1.Rows[e.RowIndex];
+
+                _selectedActividadId = Convert.ToInt32(row.Cells["IdActividad"].Value);
+
                 txtNombre.Text = row.Cells["Nombre"].Value?.ToString();
                 txtDesc.Text = row.Cells["Descripcion"].Value?.ToString();
                 dateTimePicker1.Value = Convert.ToDateTime(row.Cells["Fecha"].Value);
@@ -72,7 +77,7 @@ namespace WinFormsActMusicales
                 Nombre = txtNombre.Text,
                 Descripcion = txtDesc.Text,
                 Fecha = dateTimePicker1.Value,
-                TipoActividadId = Convert.ToInt32((int)comboBox1.SelectedValue),
+                TipoActividadId = Convert.ToInt32(comboBox1.SelectedValue),
                 Lugar = txtLugar.Text
             };
 
@@ -81,14 +86,46 @@ namespace WinFormsActMusicales
             ClearInputs();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
+            if (_selectedActividadId == null)
+            {
+                MessageBox.Show("Selecciona una actividad para actualizar.");
+                return;
+            }
 
+            var act = new Actividad
+            {
+                IdActividad = _selectedActividadId.Value,
+                Nombre = txtNombre.Text,
+                Descripcion = txtDesc.Text,
+                Fecha = dateTimePicker1.Value,
+                TipoActividadId = Convert.ToInt32(comboBox1.SelectedValue),
+                Lugar = txtLugar.Text
+            };
+
+            var result = await api.UpdateActividadAsync(_selectedActividadId.Value, act);
+            MessageBox.Show(result);
+            ClearInputs();
+            _selectedActividadId = null;
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private async void btnEliminar_Click(object sender, EventArgs e)
         {
+            if (_selectedActividadId == null)
+            {
+                MessageBox.Show("Selecciona una actividad para eliminar.");
+                return;
+            }
 
+            var confirm = MessageBox.Show("¿Estás seguro de eliminar esta actividad?", "Confirmar", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                var result = await api.DeleteActividadAsync(_selectedActividadId.Value);
+                MessageBox.Show(result);
+                ClearInputs();
+                _selectedActividadId = null;
+            }
         }
 
         private void ClearInputs()
@@ -99,6 +136,11 @@ namespace WinFormsActMusicales
             comboBox1.SelectedIndex = -1;
             dateTimePicker1.Value = DateTime.Today;
             comboBox1.SelectedValue = -1;
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            ClearInputs();
         }
     }
 }

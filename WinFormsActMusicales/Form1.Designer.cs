@@ -43,6 +43,8 @@
             button1 = new Button();
             btnEliminar = new Button();
             dateTimePicker1 = new DateTimePicker();
+            btnLimpiar = new Button();
+            label6 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -177,11 +179,34 @@
             dateTimePicker1.Size = new Size(230, 27);
             dateTimePicker1.TabIndex = 16;
             // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Location = new Point(670, 566);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(112, 49);
+            btnLimpiar.TabIndex = 17;
+            btnLimpiar.Text = "Limpiar Formulario";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Britannic Bold", 25.8000011F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.ForeColor = Color.SteelBlue;
+            label6.Location = new Point(240, 27);
+            label6.Name = "label6";
+            label6.Size = new Size(502, 48);
+            label6.TabIndex = 18;
+            label6.Text = "ACTIVIDADES MUSICALES";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1019, 640);
+            Controls.Add(label6);
+            Controls.Add(btnLimpiar);
             Controls.Add(dateTimePicker1);
             Controls.Add(btnEliminar);
             Controls.Add(button1);
@@ -222,5 +247,7 @@
         private Button button1;
         private Button btnEliminar;
         private DateTimePicker dateTimePicker1;
+        private Button btnLimpiar;
+        private Label label6;
     }
 }
